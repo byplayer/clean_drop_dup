@@ -1,1 +1,7 @@
+/.bundle
+/vendor/ruby
+/log/*.log
+
 /.env
+
+/dbox.dat

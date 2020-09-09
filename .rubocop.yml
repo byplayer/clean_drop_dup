@@ -1,0 +1,17 @@
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/MethodLength:
+  Max: 18
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: true
+
+Style/HashTransformValues:
+  Enabled: true
+
+Security/MarshalLoad:
+  Enabled: false
