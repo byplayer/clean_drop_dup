@@ -31,7 +31,7 @@ class CleanDropDup
     end
 
     delete_duplicated
-    dump_db
+    # dump_db
     @logger.info('----------- clean up end -----------')
   ensure
     @db&.close
@@ -67,12 +67,20 @@ class CleanDropDup
     deleted_keys = []
     @db.each_pair do |k, v|
       v = Marshal.load(v)
-      v.sort
+      v = v.sort.reverse
       same_dir = true
       dir = File.dirname(v[0])
+      date_dir = dir
+      if dir =~ %r{(/[Pp]hoto/.*/[0-9]{4}\.[0-9]{2}\.[0-9]{2})}
+        date_dir = Regexp.last_match[1]
+      end
+      @logger.info("date_dir:#{date_dir}")
+      keep_path = v[0]
       del_targets = v[1...(v.size)]
       del_targets.each do |dv|
-        unless dir == File.dirname(dv)
+        if dir.downcase == File.dirname(dv).downcase ||
+           date_dir.downcase == File.dirname(dv).downcase
+        else
           same_dir = false
           break
         end
@@ -87,7 +95,7 @@ class CleanDropDup
       msg =
         "remove duplicated file\n" \
         "  target key: #{k}\n" \
-        "  keep: #{v[0]}\n"
+        "  keep: #{keep_path}\n"
 
       del_targets.each do |dv|
         msg += "  del : #{dv}\n"
